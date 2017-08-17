@@ -41,5 +41,6 @@ public:
 
 	bool joystickPresent(int joy);
 	const float *getJoystickAxes(int joy, int *count);
-	const unsigned char *getJoystickButtons(int joy, int *count);*/
+	const unsigned char *getJoystickButtons(int joy, int *count);
+	const char *getJoystickName(int joy);*/
 };
