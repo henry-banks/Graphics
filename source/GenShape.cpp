@@ -78,16 +78,29 @@ Geometry makeNGon(size_t sides, float r)
 
 }
 
-Geometry makeCheckerboard(float x, float y, float rad)
+Geometry makeCheckerboard(int dim, float size)
 {
-	
-	Vertex v[4] =
-	{ { { x - 1, y - 1, 0, 1 },{ 1,0,0,1 } },
-	{ { x - 1, y + 1, 0, 1 },{ 1,0,0,1 } },
-	{ { x + 1, y + 1, 0, 1 },{ 1,0,0,1 } },
-	{ { x + 1, y - 1, 0, 1 },{ 1,0,0,1 } } };
-	unsigned idx[4] = { 0,1,2,3, };
-	Geometry retval = makeGeometry(v, 4, idx, 4);
+	unsigned vsize = (dim + 1)*(dim + 1);
+	unsigned isize = 3 * 2 * dim * dim;
+	Vertex *verts = new Vertex[vsize];
+	unsigned *idxs = new unsigned[isize];
+
+	float step = dim / size;
+
+	for (int i = 0; i < dim*dim; i++)
+	{
+		for (int j = 0; j < dim+1; j++)
+		{
+			float x = j * step;
+			float y = i * step;
+		}
+	}
+
+
+	Geometry retval = makeGeometry(verts, vsize, idxs, isize);
+
+	delete[] verts;
+	delete[] idxs;
 
 	return retval;
 }
