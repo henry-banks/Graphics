@@ -68,3 +68,135 @@ double Context::getTime()
 {
 	return glfwGetTime();
 }
+
+//more stuff
+
+//void Context::setTime(double time)
+//{
+//	glfwSetTime(time);
+//}
+//
+//uint64_t Context::getTimerValue()
+//{
+//	return glfwGetTimerValue();
+//}
+//
+//uint64_t Context::getTimerFrequency()
+//{
+//	return glfwGetTimerFrequency();
+//}
+//
+//int Context::getInputMode(int mode)
+//{
+//	return glfwGetInputMode(handle, mode);
+//}
+//
+//void Context::setInputMode(int mode, int value)
+//{
+//	glfwSetInputMode(handle, mode, value);
+//}
+//
+////const char * Context::getKeyName(int key, int scancode)
+////{
+////	return glfwGetKeyName(key, scancode);
+////}
+//
+//void Context::setCursorPos(double xpos, double ypos)
+//{
+//	glfwSetCursorPos(handle, xpos, ypos);
+//}
+//
+////GLFWcursor * Context::createCursor(const GLFWimage * img, int xhot, int yhot)
+////{
+////	return nullptr;
+////}
+////
+////GLFWcursor * Context::createStandardCursor(int shape)
+////{
+////	return glfwCreateStandardCursor(shape);
+////}
+//
+////void Context::destroyCursor(GLFWcursor * cursor)
+////{
+////	glfwDestroyCursor(cursor);
+////}
+////
+////void Context::setCursor(GLFWcursor * cursor)
+////{
+////	glfwSetCursor(handle, cursor);
+////}
+//
+//GLFWkeyfun Context::setKeyCallback(GLFWkeyfun cbfun)
+//{
+//	return glfwSetKeyCallback(handle, cbfun);
+//}
+//
+//GLFWcharfun Context::setCharCallback(GLFWcharfun cbfun)
+//{
+//	return glfwSetCharCallback(handle, cbfun);
+//}
+//
+//GLFWcharmodsfun Context::setCharModsCallback(GLFWcharmodsfun cbfun)
+//{
+//	return glfwSetCharModsCallback(handle, cbfun);
+//}
+//
+//GLFWmousebuttonfun Context::setMouseButtonCallback(GLFWmousebuttonfun cbfun)
+//{
+//	return glfwSetMouseButtonCallback(handle, cbfun);
+//}
+//
+//GLFWcursorposfun Context::setCursorPosCallback(GLFWcursorposfun cbfun)
+//{
+//	return glfwSetCursorPosCallback(handle, cbfun);
+//}
+//
+//GLFWcursorenterfun Context::setCursorEnterCallback(GLFWcursorenterfun cbfun)
+//{
+//	return glfwSetCursorEnterCallback(handle, cbfun);
+//}
+//
+//GLFWscrollfun Context::setScrollCallback(GLFWscrollfun cbfun)
+//{
+//	return glfwSetScrollCallback(handle, cbfun);
+//}
+//
+//GLFWdropfun Context::setDropCallback(GLFWdropfun cbfun)
+//{
+//	return glfwSetDropCallback(handle, cbfun);
+//}
+//
+//bool Context::joystickPresent(int joy)
+//{
+//	return glfwJoystickPresent(joy);
+//}
+//
+////const float * Context::getJoystickAxes(int joy, int * count)
+////{
+////	return glfwGetJoystickAxes(joy, count);
+////}
+//
+////const unsigned char * Context::getJoystickButtons(int joy, int * count)
+////{
+////	return glfwGetJoystickButtons(joy, count);
+////}
+//
+////const char * Context::getJoystickName(int joy)
+////{
+////	return glfwGetJoystickName(joy);
+////}
+//
+//GLFWjoystickfun Context::setJoystickCallback(GLFWjoystickfun cbfun)
+//{
+//	return glfwSetJoystickCallback(cbfun);
+//}
+//
+//void Context::setClipboardString(const char * string)
+//{
+//	glfwSetClipboardString(handle, string);
+//}
+//
+////const char * Context::getClipboardString()
+////{
+////	return glfwGetClipboardString(handle);
+////}
