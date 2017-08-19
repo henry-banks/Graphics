@@ -17,13 +17,14 @@ int main()
 	//Geometry g = makeGeometry(verts, 3, idxs, 3);
 
 	//Geometry g = makeRectangle(0, 0, .5, .5);
-	Geometry g = makeNGon(100, 1);
+	//Geometry g = makeNGon(100, 1);
+	Geometry g = makeCheckerboard(5, .9);
 
 	const char* vsource =
 		"#version 450\n"
 		"layout(location = 0) in vec4 pos;\n"	//location corresponds to an attribute
 		"layout(location = 1) in vec4 color;\n"
-		"out vec4 vColor;"
+		"out vec4 vColor;\n"
 		"void main ()\n"
 		"{\n"
 			"gl_Position = pos;\n"
@@ -32,12 +33,11 @@ int main()
 
 	const char* fsource =
 		"#version 450\n"
-		"in vec4 vColor;\n"
 		"out vec4 outColor;\n"
+		"in vec4 vColor;\n"
 		"void main ()\n"
 		"{\n"
-			"outColor = vColor;\n"
-			//"outColor = vec4(1.0,0.0,0.0,1.0);\n"
+			"outColor = 1-vColor;\n"
 		"}\n";
 
 	Shader s = makeShader(vsource, fsource);
