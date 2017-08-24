@@ -1,4 +1,4 @@
-/// Graphics\include\graphics\COntext.h
+/// Graphics\include\graphics\Context.h
 
 #pragma once
 

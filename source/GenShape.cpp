@@ -78,6 +78,64 @@ Geometry makeNGon(size_t sides, float r)
 
 }
 
+Geometry makeNGon(size_t sides, float r, float x, float y)
+{
+	//total vertices
+	unsigned vsize;
+	if (sides <= 4) vsize = sides;
+	else vsize = sides + 1;
+
+	//vsize = sides;
+
+	//triangles * 3
+	unsigned isize;
+	if (sides <= 3) isize = sides;	//point/line/triangle
+	else if (sides == 4) isize = 6;	//special case for rectangles
+	else isize = sides * 3;			//circle of triangles
+
+	Vertex *verts = new Vertex[vsize];
+	unsigned *idxs = new unsigned[isize];
+
+
+	//Populate vertices
+	float a = (2 * 3.14159265359) / sides;
+
+	verts[0] = { { x,y,0,1 },{ 1,1,1,1 },{ 0,0 } };
+	for (unsigned i = 1; i < vsize; i++)
+	{
+		double xOffset = sin((i - 1)*a) * r; //angle to vector
+		double yOffset = cos((i - 1)*a) * r;
+
+		verts[i] = { { x+xOffset,y+yOffset,0,1 },{ xOffset,yOffset,.5,1 },{ xOffset,yOffset } };
+
+	}
+	//verts[vsize-1] = { { 0,0,0,0 },{ 1,0,0,1 } };
+
+	//Populate indices
+	//I can't math so this is what i do
+	int count1 = 1;
+	for (unsigned i = 0; i < isize; i++)
+	{
+		int count = i % 3;
+		switch (count)
+		{
+		case 0: idxs[i] = 0; break;
+		case 1: idxs[i] = count1; break;
+		case 2: idxs[i] = ++count1; break;
+		default:
+			break;
+		}
+	}
+	idxs[isize - 1] = 1;
+
+	Geometry retval = makeGeometry(verts, vsize, idxs, isize);
+
+	delete[] verts;
+	delete[] idxs;
+
+	return retval;
+}
+
 Geometry makeCheckerboard(int dim, float size)
 {
 	unsigned vdim = dim + 1;

@@ -47,7 +47,7 @@ int main()
 	0,255,0,255, };
 
 	//use pixels2 for fun times
-	Texture t_magyel = makeTexture(3, 1, 3, pixels3);
+	Texture t_magyel = makeTexture(3, 1, 3, pixels);
 	//Texture t_magyel = makeTexture(4, 4, 1, pixels4);
 
 	Texture t_mask = makeTexture(4, 1, 4, pixels2);
