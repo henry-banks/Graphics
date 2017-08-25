@@ -5,6 +5,7 @@
 #include "graphics\Draw.h"
 #include "graphics\GenShape.h"
 #include "glm\gtx\transform.hpp"
+#include "glm\ext.hpp"
 #include <ctime>
 
 #include <iostream>
@@ -37,23 +38,25 @@ int main()
 	const char* vsource =
 		"#version 450\n"
 		"layout(location = 0) in vec4 pos;\n"	//location corresponds to an attribute
-		"layout(location = 6) uniform mat4 model;\n"
+		"layout(location = 2) in vec2 texCoord;"
+		"layout(location = 0) uniform mat4 model;\n"
+		"out vec2 vUV;\n"
 		"void main ()\n"
 		"{\n"
-		"gl_Position = pos * model;\n"
+		"gl_Position = model * pos; vUV = texCoord;\n"
 		"}\n";
 
 	const char* fsource =
 		"#version 450\n"
 		"out vec4 outColor;\n"
-		"layout(location = 0) uniform int k0;\n"
+		/*"layout(location = 0) uniform int k0;\n"
 		"layout(location = 1) uniform int k1;\n"
-		"layout(location = 2) uniform int k2;\n"
+		"layout(location = 2) uniform int k2;\n"*/
 
 		//layout only needed if you set it in the program...also defaults
-		"layout(location = 3) uniform vec4 c0 = vec4(1,0,0,1);\n"
+		/*"layout(location = 3) uniform vec4 c0 = vec4(1,0,0,1);\n"
 		"layout(location = 4)uniform vec4 c1 = vec4(0,1,0,1);\n"
-		"layout(location = 5)uniform vec4 c2 = vec4(0,0,1,1);\n"
+		"layout(location = 5)uniform vec4 c2 = vec4(0,0,1,1);\n"*/
 
 		"in vec2 vUV;\n"
 		"void main ()\n"
@@ -68,13 +71,14 @@ int main()
 	{
 		clearFrameBuffer(f);
 
-		int loc = 0, tex = 0;
-		glm::mat4 rot = glm::rotate((float)context.getTime(), glm::vec3(0.f, 0.f, 1.f))*
-						glm::scale(glm::vec3(1,1,1));
+		int loc = 0, tSlot = 0;
+		glm::mat4 rot = glm::rotate((float)context.getTime() / 10, glm::vec3(0.f, 0.f, 1.f));
+			//glm::scale(glm::vec3(1, 1, 1));
+			//glm::translate(glm::vec3(0,0,0));
 
-		setUniforms(s, loc, tex, (int)context.getKey('A'), (int)context.getKey('S'), (int)context.getKey('D'),
-								glm::vec4(0,1,1,1), glm::vec4(1,0,1,1), glm::vec4(.5,.5,1,1), rot);
-		//s0_draw(f, s, g);
+		setUniforms(s, loc, tSlot, t_magyel,
+								 rot);
+		//s0_draw(f, s, g);(int)context.getKey('A'), (int)context.getKey('S'), (int)context.getKey('D')glm::vec4(0,1,1,1), glm::vec4(1,0,1,1), glm::vec4(.5,.5,1,1),
 
 
 		//setUniforms()

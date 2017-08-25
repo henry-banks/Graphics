@@ -7,7 +7,7 @@ struct Framebuffer;
 void s0_draw(const Framebuffer &f, const Shader &s, const Geometry &g);
 
 
-void clearFrameBuffer(const Framebuffer &f);
+void clearFrameBuffer(const Framebuffer &f, bool color = true, bool depth = true);
 
 void setUniform(const Shader &shader, int location, float value);
 void setUniform(const Shader &shader, int location, int value);
@@ -25,6 +25,7 @@ namespace __internal
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, glm::vec3 val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, glm::vec4 val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, glm::mat3 val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, glm::mat4 val);
 
 }
 
@@ -52,3 +53,7 @@ void setUniforms(const Shader &s, int &loc_io, int &tex_io, const T &val)
 {
 	__internal::t_setUniform(s, loc_io, tex_io, val);
 }
+
+enum RenderFlag{DEPTH = 1};
+
+void setFlags(int flags);
