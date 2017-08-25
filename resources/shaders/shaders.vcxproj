@@ -114,6 +114,8 @@
     <None Include="cube.vert" />
     <None Include="mono.frag" />
     <None Include="mono.vert" />
+    <None Include="mvplite.frag" />
+    <None Include="mvplite.vert" />
     <None Include="test.frag" />
     <None Include="test.vert" />
     <None Include="textured.frag" />
