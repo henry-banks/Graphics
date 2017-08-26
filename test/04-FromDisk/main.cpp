@@ -77,11 +77,11 @@ int main()
 	
 		loc = 0, tslot = 0;
 		setUniforms(scube, loc, tslot, modSphere2, fTime, angry);	
-		s0_draw(f, scube, sphere);
+		//s0_draw(f, scube, sphere);
 		
 		loc = 0, tslot = 0;
 		setUniforms(scube, loc, tslot, modSphere3, fTime, lava);
-		s0_draw(f, scube, sphere);
+		//s0_draw(f, scube, sphere);
 	}
 
 	freeShader(s);

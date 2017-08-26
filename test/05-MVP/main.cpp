@@ -29,16 +29,29 @@ int main()
 			glm::scale(glm::vec3(.5, .5, .5))*
 			glm::translate(glm::vec3(0, -1, 0));
 		glm::mat4 modSpear2 =
-			glm::rotate(fTime * speed,glm::vec3(0, 3, 0))*
+			
 			glm::scale(glm::vec3(.5, .5, .5))*
-			glm::translate(glm::vec3(-3, -1, 0));
+			glm::translate(glm::vec3(-3, -1, 0))*
+			glm::rotate(fTime * speed, glm::vec3(0, 3, 0));
 		glm::mat4 modSpear3 =
 			glm::rotate(fTime * speed, glm::vec3(0, 0, 3))*
 			glm::scale(glm::vec3(.5, .5, .5))*
 			glm::translate(glm::vec3(3, -1, 0));
 
+
+		//wasd
+		int x = 0, y = 0;
+		if (context.getKey('W')) y += 1;
+		if (context.getKey('S')) y -= 1;
+
+		if (context.getKey('A')) x += 1;
+		if (context.getKey('D')) x -= 1;
+
+		glm::vec3 targetPosition = { x,y,0 };
+
+
 		//camera stuff
-		glm::mat4 cam_view = glm::lookAt(glm::vec3(0, 3, -4), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
+		glm::mat4 cam_view = glm::lookAt(glm::vec3(0, -1, -4), glm::vec3(0, 1, 0), glm::vec3(0, 1, 0));
 		glm::mat4 cam_proj = glm::perspective(45.f, 800.f / 600.f, .01f, 100.f);
 		glm::mat4 go_model(1.0); // identity matrix for now
 

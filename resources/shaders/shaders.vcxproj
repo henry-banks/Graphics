@@ -112,6 +112,8 @@
   <ItemGroup>
     <None Include="cube.frag" />
     <None Include="cube.vert" />
+    <None Include="lambert.frag" />
+    <None Include="lambert.vert" />
     <None Include="mono.frag" />
     <None Include="mono.vert" />
     <None Include="mvplite.frag" />

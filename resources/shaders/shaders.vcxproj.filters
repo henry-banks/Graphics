@@ -45,5 +45,11 @@
     <None Include="mvplite.frag">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="lambert.frag">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="lambert.vert">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
