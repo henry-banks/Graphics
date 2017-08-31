@@ -1,5 +1,6 @@
 //this explains all the weird functions:
 //http://docs.gl/
+#define GLM_FORCE_SWIZZLE
 
 #include "graphics\RenderObject.h"
 #include "graphics\Vertex.h"
@@ -44,9 +45,17 @@ Geometry makeGeometry(const Vertex * verts, size_t vsize, const unsigned * idxs,
 	glEnableVertexAttribArray(2); //Tells video card which attribute to use
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)32);
 
-	// This one's for normals
+	// This one's for normals 4c2 so it jumps by 8 not 16
 		glEnableVertexAttribArray(3); //Tells video card which attribute to use
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)40);
+
+	// This one's for tangent
+	glEnableVertexAttribArray(4); //Tells video card which attribute to use
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)56);
+
+	// This one's for bitangent
+	glEnableVertexAttribArray(5); //Tells video card which attribute to use
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)72);
 
 	//unbind variables
 	glBindVertexArray(0);
@@ -63,6 +72,47 @@ void freeGeometry(Geometry & g)
 	glDeleteBuffers(1, &g.ibo);
 	glDeleteVertexArrays(1, &g.handle);
 	g = { 0,0,0,0 };	//zero out geometry
+}
+
+
+//helper function \o/
+glm::vec4 calcTangent(const Vertex &v0, const Vertex &v1, const Vertex &v2)
+{
+	//direction between vertices
+	glm::vec4 p1 = v1.pos - v0.pos;
+	glm::vec4 p2 = v2.pos - v0.pos;
+
+	//direction for uvs
+	glm::vec2 t1 = v1.texCoord - v0.texCoord;
+	glm::vec2 t2 = v2.texCoord - v0.texCoord;
+
+
+	//get average of some stuff??
+	//it's math magic
+	return glm::normalize((p1*t2.y - p2*t1.y) / (t1.x*t2.y - t1.y*t2.x));
+	//uv.x will follow tangents
+	//uv.y will follow bitengents
+}
+
+//#define GLM_FORCE_SWIZZLE
+void solveTangents(Vertex * v, size_t vsize, const unsigned * idxs, size_t isize)
+{
+	//for every 3 vertices (every triangle)
+	for (int i = 0; i < isize; i += 3)
+	{
+		//get the tanget of the three things
+		glm::vec4 T = calcTangent(v[idxs[i]], v[idxs[i+1]], v[idxs[i+2]]);
+
+		for (int j = 0; j < 3; j++)
+			//get the middle angle (the NORMAL) of two other angles
+			v[idxs[i + j]].tangent = glm::normalize(T + v[idxs[i + j]].tangent);
+	}
+
+	//CROSS PRODUCT WILL GIVE YOU THE Z AXIS IF YOU PUT IN THE X/Y AXIS.
+	//this only works for vec3
+	//we're getting the bitangent here
+	for (int i = 0; i < vsize; i++)
+		v[i].bitangent = glm::vec4(glm::cross(v[i].normal.xyz(), v[i].tangent.xyz()), 0);
 }
 
 

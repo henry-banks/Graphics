@@ -31,6 +31,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "05-MVP", "test\05-MVP\05-MV
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "06-Lights", "test\06-Lights\06-Lights.vcxproj", "{EB1D149A-D50D-4D76-83E3-84118C478780}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "07-Materials", "test\07-Materials\07-Materials.vcxproj", "{CBB50AB5-A1B0-4223-A407-03A0E6C4F90D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{62F23E81-192E-4FD9-9E63-92D501EC3A37} = {62F23E81-192E-4FD9-9E63-92D501EC3A37}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +126,16 @@ Global
 		{EB1D149A-D50D-4D76-83E3-84118C478780}.Release|x64.Build.0 = Release|x64
 		{EB1D149A-D50D-4D76-83E3-84118C478780}.Release|x86.ActiveCfg = Release|Win32
 		{EB1D149A-D50D-4D76-83E3-84118C478780}.Release|x86.Build.0 = Release|Win32
+		{CBB50AB5-A1B0-4223-A407-03A0E6C4F90D}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{CBB50AB5-A1B0-4223-A407-03A0E6C4F90D}.Debug|x64.ActiveCfg = Debug|x64
+		{CBB50AB5-A1B0-4223-A407-03A0E6C4F90D}.Debug|x64.Build.0 = Debug|x64
+		{CBB50AB5-A1B0-4223-A407-03A0E6C4F90D}.Debug|x86.ActiveCfg = Debug|Win32
+		{CBB50AB5-A1B0-4223-A407-03A0E6C4F90D}.Debug|x86.Build.0 = Debug|Win32
+		{CBB50AB5-A1B0-4223-A407-03A0E6C4F90D}.Release|Any CPU.ActiveCfg = Release|Win32
+		{CBB50AB5-A1B0-4223-A407-03A0E6C4F90D}.Release|x64.ActiveCfg = Release|x64
+		{CBB50AB5-A1B0-4223-A407-03A0E6C4F90D}.Release|x64.Build.0 = Release|x64
+		{CBB50AB5-A1B0-4223-A407-03A0E6C4F90D}.Release|x86.ActiveCfg = Release|Win32
+		{CBB50AB5-A1B0-4223-A407-03A0E6C4F90D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -19,6 +19,8 @@ Geometry makeGeometry(const Vertex *verts, size_t vsize, const unsigned *idxs, s
 void freeGeometry(Geometry &g);
 
 
+void solveTangents(Vertex *v, size_t vsize, const unsigned *idxs, size_t isize);
+
 struct Shader
 {
 	unsigned handle;

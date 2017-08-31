@@ -9,4 +9,7 @@ struct Vertex
 	glm::vec2 texCoord;
 	//make sure the w (4th value) is set to 0 
 	glm::vec4 normal;
+
+	glm::vec4 tangent;
+	glm::vec4 bitangent;  //aka bitangent
 };

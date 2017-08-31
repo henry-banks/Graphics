@@ -117,6 +117,8 @@ Geometry loadGeometry(const char * path)
 		verts[i].color = randColor();
 	}
 
+	solveTangents(verts, vsize, indices, isize);
+
 	retval = makeGeometry(verts, vsize, indices, isize);
 	delete[] verts;
 	delete[] indices;
