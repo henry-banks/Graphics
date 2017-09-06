@@ -11,7 +11,7 @@ in mat4 vTBN;
 
 float lamb(vec3 N, vec3 L)
 {
-	return max(0, dot(N,-L);
+	return max(0, dot(N,-L));
 }
 
 float phong(vec3 N, vec3 L, vec3 V, float power)
@@ -35,5 +35,5 @@ void main()
 	float phong = phong(N,L,V,1.0);
 
 	outColor = texture(diffuseMap,vUV) * lamb
-						+ vec4(1,1,0,1) * spec;
+						+ vec4(1,1,0,1);
 }
