@@ -82,7 +82,6 @@ int main()
 		//Light Pass
 		clearFrameBuffer(f);
 		setFlags(RenderFlag::DEPTH);
-		float fTime = (float)context.getTime();
 
 		loc = 0, slot = 0;
 		setUniforms(sDirect, loc, slot, lightProj, lightView, ssModel, tex2, tex, lightDir);
