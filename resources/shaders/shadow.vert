@@ -8,5 +8,5 @@ layout(location = 2) uniform mat4 model;
 
 void main()
 {
-	gl_Position = l_proj * l_view * model * position;
+	gl_Position = l_proj * l_view * model * pos;
 }

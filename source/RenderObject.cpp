@@ -2,68 +2,67 @@
 //http://docs.gl/
 #define GLM_FORCE_SWIZZLE
 
+#include "glincl.h"
 #include "graphics\RenderObject.h"
 #include "graphics\Vertex.h"
-#include "glincl.h"
 
 #ifdef _DEBUG
 #include <iostream>
 #endif
 
 //sets up things
-Geometry makeGeometry(const Vertex * verts, size_t vsize, const unsigned * idxs, size_t isize)
+Geometry makeGeometry(const Vertex *verts, size_t vsize,
+	const unsigned *idxs, size_t isize)
 {
-	//Initializer List (constructor)
 	Geometry retval = { 0,0,0,isize };
 
-
-	//Declare openGL objects and acquire handles
+	//Declare our openGL objects and acquire handles.
 	glGenBuffers(1, &retval.vbo);
 	glGenBuffers(1, &retval.ibo);
 	glGenVertexArrays(1, &retval.handle);
 
-	//Scope variables
-	glBindVertexArray(retval.handle); //ALL buffers bound after this will attach to this array
-	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo);				//array of vertices
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, retval.ibo);		//array of indices
+	// now lets scope the variables!
+	glBindVertexArray(retval.handle);
+	glBindBuffer(GL_ARRAY_BUFFER, retval.vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, retval.ibo);
 
-	//Initialize the buffers with our own data
+	// initialize all of our buffers
 	glBufferData(GL_ARRAY_BUFFER, vsize * sizeof(Vertex), verts, GL_STATIC_DRAW);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, isize * sizeof(unsigned), idxs, GL_STATIC_DRAW);
 
+	// describe our memory layout
+	glEnableVertexAttribArray(0);  // position attribute
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE,
+		sizeof(Vertex), (void*)0);
 
-	//Describe memory layout
-	//This one's for position
-	glEnableVertexAttribArray(0); //Tells video card which attribute to use
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+	glEnableVertexAttribArray(1);  // color attribute
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE,
+		sizeof(Vertex), (void*)16);
 
-	//This one's for color
-	glEnableVertexAttribArray(1); //Tells video card which attribute to use
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)16);
+	glEnableVertexAttribArray(2);  // texCoord
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
+		sizeof(Vertex), (void*)32);
 
-	//This one's for texCoord
-	glEnableVertexAttribArray(2); //Tells video card which attribute to use
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)32);
+	glEnableVertexAttribArray(3);  // normals
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE,
+		sizeof(Vertex), (void*)40);
 
-	// This one's for normals 4c2 so it jumps by 8 not 16
-		glEnableVertexAttribArray(3); //Tells video card which attribute to use
-	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)40);
+	glEnableVertexAttribArray(4);  // tangent
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE,
+		sizeof(Vertex), (void*)56);
 
-	// This one's for tangent
-	glEnableVertexAttribArray(4); //Tells video card which attribute to use
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)56);
+	glEnableVertexAttribArray(5);  // bitangent
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE,
+		sizeof(Vertex), (void*)72);
 
-	// This one's for bitangent
-	glEnableVertexAttribArray(5); //Tells video card which attribute to use
-	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)72);
-
-	//unbind variables
+	// unbind the variables
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	return retval;
 }
+
 
 //Basically a delete function
 void freeGeometry(Geometry & g)
@@ -117,25 +116,24 @@ void solveTangents(Vertex * v, size_t vsize, const unsigned * idxs, size_t isize
 
 
 
-Shader makeShader(const char * vertSource, const char * fragSource)
+Shader makeShader(const char *vert_src, const char *frag_src)
 {
-	Shader retval = {0};
+	Shader retval = { 0 };
 
-	//create shader program and attach that to the shader variable
 	retval.handle = glCreateProgram();
-	//create local shader variables for linking.
+
 	unsigned vs = glCreateShader(GL_VERTEX_SHADER);
 	unsigned fs = glCreateShader(GL_FRAGMENT_SHADER);
 
-	//attach shaders to shader program
-	glShaderSource(vs, 1, &vertSource, 0);
-	glShaderSource(fs, 1, &fragSource, 0);
+	glShaderSource(vs, 1, &vert_src, 0);
+	glShaderSource(fs, 1, &frag_src, 0);
 
-	//compile shaders
 	glCompileShader(vs);
+	glCompileShader(fs);
 
 #ifdef _DEBUG
 	GLint success = GL_FALSE;
+
 	glGetShaderiv(vs, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE)
 	{
@@ -144,57 +142,51 @@ Shader makeShader(const char * vertSource, const char * fragSource)
 		char *log = new char[length];
 		glGetShaderInfoLog(vs, length, 0, log);
 		std::cerr << log << std::endl;
-		assert(false && "Vertex failed to compile!");
 		delete[] log;
-		
 	}
-#endif // _DEBUG
 
-	glCompileShader(fs);
-
-#ifdef _DEBUG
-	GLint success2 = GL_FALSE;
-	glGetShaderiv(fs, GL_COMPILE_STATUS, &success2);
-	if (success2 == GL_FALSE)
+	success = GL_FALSE;
+	glGetShaderiv(fs, GL_COMPILE_STATUS, &success);
+	if (success == GL_FALSE)
 	{
 		int length = 0;
 		glGetShaderiv(fs, GL_INFO_LOG_LENGTH, &length);
 		char *log = new char[length];
 		glGetShaderInfoLog(fs, length, 0, log);
 		std::cerr << log << std::endl;
-		assert(false && "Fragment failed to compile!");
 		delete[] log;
 	}
-#endif // _DEBUG
+#endif
 
-	//attach and link shaders to shader program
+
+
 	glAttachShader(retval.handle, vs);
 	glAttachShader(retval.handle, fs);
 
 	glLinkProgram(retval.handle);
 
+
 #ifdef _DEBUG
-	GLint success3 = GL_FALSE;
-	glGetProgramiv(retval.handle, GL_LINK_STATUS, &success3);
-	if (success3 == GL_FALSE)
+	success = GL_FALSE;
+	glGetProgramiv(retval.handle, GL_LINK_STATUS, &success);
+	if (success == GL_FALSE)
 	{
 		int length = 0;
 		glGetProgramiv(retval.handle, GL_INFO_LOG_LENGTH, &length);
 		char *log = new char[length];
 		glGetProgramInfoLog(retval.handle, length, 0, log);
 		std::cerr << log << std::endl;
-		assert(false && "Program failed to compile!");
 		delete[] log;
 	}
-#endif // _DEBUG
+#endif _DEBUG
 
 
-	//Once shaders have been linked they are no longer needed and are deleted.
 	glDeleteShader(vs);
 	glDeleteShader(fs);
 
 	return retval;
 }
+
 
 //delete shader
 void freeShader(Shader & s)
@@ -204,27 +196,29 @@ void freeShader(Shader & s)
 }
 
 
-Texture makeTexture(unsigned w, unsigned h, unsigned c, const unsigned char * pixels)
+Texture makeTexture(unsigned w, unsigned h, unsigned c, const unsigned char * pixels, bool isFloat)
 {
 	Texture retval = { 0 };
 
-	GLenum f = 0;
+	GLenum f = 0, i = 0;
 	switch (c)
 	{
-	case 1: f = GL_RED; break;
-	case 2: f = GL_RG; break;
-	case 3: f = GL_RGB; break;
-	case 4: f = GL_RGBA; break;
+	case 0: f = GL_DEPTH_COMPONENT; i = GL_DEPTH24_STENCIL8; break;
+	case 1: f = GL_RED;  i = GL_R32F;    break;
+	case 2: f = GL_RG;   i = GL_RG32F;   break;
+	case 3: f = GL_RGB;  i = GL_RGB32F;  break;
+	case 4: f = GL_RGBA; i = GL_RGBA32F; break;
 	}
 
 	glGenTextures(1, &retval.handle);
 	glBindTexture(GL_TEXTURE_2D, retval.handle);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);	//linear
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);	//nearest neighbor 
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);	//nearest neighbor 
 
 	//make texture
-	glTexImage2D(GL_TEXTURE_2D, 0, f, w, h, 0, f, GL_UNSIGNED_BYTE, pixels);
+	glTexImage2D(GL_TEXTURE_2D, 0, ((isFloat || c == 0) ? i : f), w, h, 0, f,
+		(isFloat ? GL_FLOAT : GL_UNSIGNED_BYTE), pixels);
 
 	//unbind
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -236,4 +230,43 @@ void freeTexture(Texture & t)
 {
 	glDeleteTextures(1, &t.handle);
 	t = { 0 };
+}
+
+Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c,
+	bool hasDepth, unsigned nTargets, unsigned nFloatTargets)
+{
+	Framebuffer retval = { 0,w,h, 0, 0,{ 0 } };
+	retval.nTargets = nTargets + nFloatTargets;
+
+	glGenFramebuffers(1, &retval.handle);
+	glBindFramebuffer(GL_FRAMEBUFFER, retval.handle);
+	if (hasDepth)
+	{
+		retval.depthTarget = makeTexture(w, h, 0, 0, 0);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+			retval.depthTarget.handle, 0);
+	}
+
+	const GLenum attachments[8] =
+	{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2,
+		GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4, GL_COLOR_ATTACHMENT5,
+		GL_COLOR_ATTACHMENT6, GL_COLOR_ATTACHMENT7 };
+
+	for (int i = 0; i < retval.nTargets && i < 8; ++i)
+	{
+		retval.targets[i] = makeTexture(w, h, c, 0, i >= nTargets);
+		glFramebufferTexture(GL_FRAMEBUFFER, attachments[i], retval.targets[i].handle, 0);
+	}
+	glDrawBuffers(retval.nTargets, attachments);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	return retval;
+}
+
+void freeFramebuffer(Framebuffer & fb)
+{
+	for (unsigned i = 0; i < fb.nTargets; ++i)
+		freeTexture(fb.targets[i]);
+
+	glDeleteFramebuffers(1, &fb.handle);
+	fb = { 0,0,0,0 };
 }

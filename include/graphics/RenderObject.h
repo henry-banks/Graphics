@@ -29,18 +29,10 @@ struct Shader
 Shader makeShader(const char *vertSource, const char *fragSource);
 void freeShader(Shader &s);
 
-
-struct Framebuffer
-{
-	unsigned handle, width, height;
-};
-
-
 struct Texture
 {
 	unsigned handle;
 };
-
 
 //RGBA = 4 channels
 /*
@@ -48,5 +40,18 @@ struct Texture
 *h = height
 *c = channels
 */
-Texture makeTexture(unsigned w, unsigned h, unsigned c, const unsigned char *pixels);
+Texture makeTexture(unsigned w, unsigned h, unsigned c, const unsigned char *pixels, bool isFloat = false);
 void freeTexture(Texture &t);
+
+
+
+struct Framebuffer
+{
+	unsigned handle, width, height, nTargets;
+	Texture depthTarget;
+	Texture targets[8];
+};
+
+Framebuffer makeFramebuffer(unsigned w, unsigned h, unsigned c,
+	bool hasDepth, unsigned nTargets, unsigned nFloatTargets);
+void freeFramebuffer(Framebuffer &fb);
