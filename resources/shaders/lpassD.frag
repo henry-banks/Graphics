@@ -28,16 +28,18 @@ uniform mat4 clipToUV = mat4(0.5f, 0.0f, 0.0f, 0.0f,
 void main()
 {
 	vec4 vPos = texture(positionMap, vUV);
-	vec4 sUV = clipToUV * lightProj * lightView * vPos;
+	vec4 sUV = clipToUV * lightProj * lightView * inverse(view) * vPos;
 
 	float visibility = 1;
-	if(texture(shadowMap,sUV.xy).r  < sUV.z - shadowBias)
+	if(texture(shadowMap,sUV.xy).r  < sUV.z)
 		visibility = 0;	
 
-	vec3 LDir = -(view * lightView[2]).xyz;
+	vec3 LDir = -(view * inverse(lightView)[2]).xyz;
 	vec3 N = texture(normalMap, vUV).xyz;
 
 	float lamb = max(0,dot(-LDir,N));
 
 	outDiffuse =  lightColor * intensity * lamb * visibility;
+
+	//outDiffuse = sUV;
 }

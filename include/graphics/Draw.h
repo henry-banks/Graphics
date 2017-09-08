@@ -22,10 +22,10 @@ namespace __internal
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, int val);
 	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const Texture &val);
 
-	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, glm::vec3 val);
-	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, glm::vec4 val);
-	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, glm::mat3 val);
-	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, glm::mat4 val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::vec3 &val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::vec4 &val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::mat3 &val);
+	void t_setUniform(const Shader &s, int &loc_io, int &tex_io, const glm::mat4 &val);
 
 }
 

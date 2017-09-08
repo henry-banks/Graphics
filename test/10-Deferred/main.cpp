@@ -37,6 +37,7 @@ int main()
 	objects[0].specular = loadTexture("../../resources/textures/four_specular.tga");
 	objects[0].normal	= loadTexture("../../resources/textures/four_normal.tga");
 	objects[0].gloss = 4;
+	objects[0].model = glm::scale(glm::vec3(5, 5, 5)) * glm::rotate(glm::radians(90.f), glm::vec3(-1, 0, 0));
 
 	//soulspear
 	objects[1].geo = loadGeometry("../../resources/models/soulspear.obj");
@@ -44,6 +45,7 @@ int main()
 	objects[1].specular = loadTexture("../../resources/textures/soulspear_specular.tga");
 	objects[1].normal = loadTexture("../../resources/textures/soulspear_normal.tga");
 	objects[1].gloss = 4;
+	//objects[1].model = glm::rotate(glm::radians(90.f),glm::vec3(-1,0,0));
 
 	//earth
 	objects[2].geo = loadGeometry("../../resources/models/sphere.obj");
@@ -56,7 +58,7 @@ int main()
 
 	//Framebuffer
 	Framebuffer screen{ 0,1280,720 };
-	Framebuffer gbuffer = makeFramebuffer(w, h, 4, true, 1, 2);
+	Framebuffer gbuffer = makeFramebuffer(w, h, 4, true, 2, 2);
 	Framebuffer lbuffer = makeFramebuffer(w, h, 4, false, 2, 0);
 	Framebuffer sbuffer = makeFramebuffer(w, h, 4, true, 2, 0);
 
@@ -71,12 +73,12 @@ int main()
 	dlights[0].range = 10;
 	dlights[0].intensity = 1;
 	dlights[0].color = glm::vec4(1, 1, 0, 1);
-	dlights[0].direction = glm::vec4(1, 0, 0, 0);	//left
+	dlights[0].direction = glm::normalize(glm::vec3(1, 0, 0));	//left
 
 	dlights[1].range = 10;
 	dlights[1].intensity = 1;
 	dlights[1].color = glm::vec4(0, 0, 1, 1);
-	dlights[1].direction = glm::vec4(-1, 0, 0, 0);	//right
+	dlights[1].direction = glm::normalize(glm::vec3(-1, 0, 0));	//right
 
 	//Shaders
 	Shader gpass = loadShader("../../resources/shaders/gpass.vert", "../../resources/shaders/gpass.frag");
@@ -85,7 +87,7 @@ int main()
 	Shader spassD = loadShader("../../resources/shaders/shadow.vert", "../../resources/shaders/shadow.frag");
 
 	int loc = 0, slot = 0;
-	while(context.step());
+	while(context.step())
 	{
 		/////////////////////////////
 		//GPass - Geometry Pass
@@ -94,7 +96,7 @@ int main()
 		for (int i = 0; i < 3; i++)
 		{
 			loc = slot = 0;
-			setUniforms(gpass, loc, slot, cam, objects[i]);
+			setUniforms(gpass, loc, slot, cam, objects[i]); // 3mat, 3tex, 1flo
 			s0_draw(gbuffer, gpass, objects[i].geo);
 		}
 
@@ -127,7 +129,8 @@ int main()
 		setFlags(RenderFlag::DEPTH);*/
 		loc = slot = 0;
 		clearFrameBuffer(screen);
-		setUniforms(cpass, loc, slot, gbuffer.targets[0], lbuffer.targets[0]);
+		setFlags(RenderFlag::NONE);
+		setUniforms(cpass, loc, slot, gbuffer.targets[0], gbuffer.targets[0]);
 		s0_draw(screen, cpass, quad);	//only draw the quad??????
 	}
 
