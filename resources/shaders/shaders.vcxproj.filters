@@ -87,5 +87,17 @@
     <None Include="lpassD.frag">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="tessTest.vert">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="tessTest.frag">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="tessTest.tesc">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="tessTest.tese">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
