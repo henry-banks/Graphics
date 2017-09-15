@@ -27,7 +27,10 @@ struct Shader
 };
 
 Shader makeShader(const char *vertSource, const char *fragSource);
-Shader makeShader(const char *vertSource, const char *tessctr_src, const char *tessevl_src, const char *fragSource);
+Shader makeShader(const char *vertSource, const char *tessctr_src, const char *tessevl_src, const char *geoSource, const char *fragSource);
+Shader makeShader(const char *vert_src, const char *tessctr_src, const char *tessevl_src, const char *frag_src);
+
+
 void freeShader(Shader &s);
 
 struct Texture

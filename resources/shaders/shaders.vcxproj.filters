@@ -99,5 +99,8 @@
     <None Include="tessTest.tese">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="tessTest.geom">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

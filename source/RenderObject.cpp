@@ -116,6 +116,7 @@ void solveTangents(Vertex * v, size_t vsize, const unsigned * idxs, size_t isize
 
 
 
+//vert, frag
 Shader makeShader(const char *vert_src, const char *frag_src)
 {
 	Shader retval = { 0 };
@@ -186,7 +187,130 @@ Shader makeShader(const char *vert_src, const char *frag_src)
 
 	return retval;
 }
+//how does "_src" = "Source"?
+//vert,tcs,tes,geo,frag
+Shader makeShader(const char *vert_src, const char *tessctr_src, const char *tessevl_src, const char *geo_src,  const char *frag_src)
+{
+	Shader retval = { 0 };
 
+	retval.handle = glCreateProgram();
+
+	unsigned vs = glCreateShader(GL_VERTEX_SHADER);
+	unsigned tcs = glCreateShader(GL_TESS_CONTROL_SHADER);
+	unsigned tes = glCreateShader(GL_TESS_EVALUATION_SHADER);
+	unsigned gs = glCreateShader(GL_GEOMETRY_SHADER);
+	unsigned fs = glCreateShader(GL_FRAGMENT_SHADER);
+
+	glShaderSource(vs, 1, &vert_src, 0);
+	glShaderSource(tcs, 1, &tessctr_src, 0);
+	glShaderSource(tes, 1, &tessevl_src, 0);
+	glShaderSource(gs, 1, &geo_src, 0);
+	glShaderSource(fs, 1, &frag_src, 0);
+
+	glCompileShader(vs);
+	glCompileShader(tcs);
+	glCompileShader(tes);
+	glCompileShader(gs);
+	glCompileShader(fs);
+
+#ifdef _DEBUG
+	GLint success = GL_FALSE;
+
+	glGetShaderiv(vs, GL_COMPILE_STATUS, &success);
+	if (success == GL_FALSE)
+	{
+		int length = 0;
+		glGetShaderiv(vs, GL_INFO_LOG_LENGTH, &length);
+		char *log = new char[length];
+		glGetShaderInfoLog(vs, length, 0, log);
+		std::cerr << log << std::endl;
+		delete[] log;
+	}
+
+	success = GL_FALSE;
+	glGetShaderiv(tcs, GL_COMPILE_STATUS, &success);
+	if (success == GL_FALSE)
+	{
+		int length = 0;
+		glGetShaderiv(tcs, GL_INFO_LOG_LENGTH, &length);
+		char *log = new char[length];
+		glGetShaderInfoLog(tcs, length, 0, log);
+		std::cerr << log << std::endl;
+		delete[] log;
+	}
+
+	success = GL_FALSE;
+	glGetShaderiv(tes, GL_COMPILE_STATUS, &success);
+	if (success == GL_FALSE)
+	{
+		int length = 0;
+		glGetShaderiv(tes, GL_INFO_LOG_LENGTH, &length);
+		char *log = new char[length];
+		glGetShaderInfoLog(tes, length, 0, log);
+		std::cerr << log << std::endl;
+		delete[] log;
+	}
+
+	success = GL_FALSE;
+	glGetShaderiv(gs, GL_COMPILE_STATUS, &success);
+	if (success == GL_FALSE)
+	{
+		int length = 0;
+		glGetShaderiv(gs, GL_INFO_LOG_LENGTH, &length);
+		char *log = new char[length];
+		glGetShaderInfoLog(gs, length, 0, log);
+		std::cerr << log << std::endl;
+		delete[] log;
+	}
+
+	success = GL_FALSE;
+	glGetShaderiv(fs, GL_COMPILE_STATUS, &success);
+	if (success == GL_FALSE)
+	{
+		int length = 0;
+		glGetShaderiv(fs, GL_INFO_LOG_LENGTH, &length);
+		char *log = new char[length];
+		glGetShaderInfoLog(fs, length, 0, log);
+		std::cerr << log << std::endl;
+		delete[] log;
+	}
+#endif
+
+
+
+	glAttachShader(retval.handle, vs);
+	glAttachShader(retval.handle, tcs);
+	glAttachShader(retval.handle, tes);
+	glAttachShader(retval.handle, gs);
+	glAttachShader(retval.handle, fs);
+
+	glLinkProgram(retval.handle);
+
+
+#ifdef _DEBUG
+	success = GL_FALSE;
+	glGetProgramiv(retval.handle, GL_LINK_STATUS, &success);
+	if (success == GL_FALSE)
+	{
+		int length = 0;
+		glGetProgramiv(retval.handle, GL_INFO_LOG_LENGTH, &length);
+		char *log = new char[length];
+		glGetProgramInfoLog(retval.handle, length, 0, log);
+		std::cerr << log << std::endl;
+		delete[] log;
+	}
+#endif _DEBUG
+
+
+	glDeleteShader(vs);
+	glDeleteShader(tcs);
+	glDeleteShader(tes);
+	glDeleteShader(gs);
+	glDeleteShader(fs);
+
+	return retval;
+}
+//vert,tcs,tes,frag
 Shader makeShader(const char *vert_src, const char *tessctr_src, const char *tessevl_src, const char *frag_src)
 {
 	Shader retval = { 0 };

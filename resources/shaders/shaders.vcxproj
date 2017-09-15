@@ -131,6 +131,7 @@
     <None Include="standard.frag" />
     <None Include="standard.vert" />
     <None Include="tessTest.frag" />
+    <None Include="tessTest.geom" />
     <None Include="tessTest.tesc" />
     <None Include="tessTest.tese" />
     <None Include="tessTest.vert" />

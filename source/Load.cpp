@@ -80,6 +80,46 @@ Shader loadShader(const char * vPath, const char * fPath)
 	return retval;
 }
 
+Shader loadShader(const char * vPath, const char * tcsPath, const char * tesPath, const char * gPath, const char * fPath)
+{
+	Shader retval = { 0 };
+
+	//load all the text as a char array for each shader
+	string vString = readFile(vPath);
+	string tcsString = readFile(tcsPath);
+	string tesString = readFile(tesPath);
+	string gString = readFile(gPath);
+	string fString = readFile(fPath);
+	const char *vsource = vString.c_str();
+	const char *tcssource = tcsString.c_str();
+	const char *tessource = tesString.c_str();
+	const char *gsource = gString.c_str();
+	const char *fsource = fString.c_str();
+
+	retval = makeShader(vsource, tcssource, tessource, gsource, fsource);
+
+	return retval;
+}
+
+Shader loadShader(const char * vPath, const char * tcsPath, const char * tesPath, const char * fPath)
+{
+	Shader retval = { 0 };
+
+	//load all the text as a char array for each shader
+	string vString = readFile(vPath);
+	string tcsString = readFile(tcsPath);
+	string tesString = readFile(tesPath);
+	string fString = readFile(fPath);
+	const char *vsource = vString.c_str();
+	const char *tcssource = tcsString.c_str();
+	const char *tessource = tesString.c_str();
+	const char *fsource = fString.c_str();
+
+	retval = makeShader(vsource, tcssource, tessource, fsource);
+
+	return retval;
+}
+
 Geometry loadGeometry(const char * path)
 {
 	Geometry retval = { 0,0,0,0 };
