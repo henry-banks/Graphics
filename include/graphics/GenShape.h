@@ -10,4 +10,4 @@ Geometry makeCheckerboard(int dim, float size);
 Geometry makeNGon(size_t sides, float r);
 Geometry makeNGon(size_t sides, float r, float x, float y);
 
-Geometry makeIcosahedron();
+Geometry makeIcosahedron(float size = 1);

@@ -15,7 +15,9 @@ void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
 	glViewport(0, 0, f.width, f.height);
 
 	//DRAW THINGS
-	glDrawElements(GL_TRIANGLES, g.size, GL_UNSIGNED_INT, 0);
+	//glDrawElements(GL_TRIANGLES, g.size, GL_UNSIGNED_INT, 0);
+	glPatchParameteri(GL_PATCH_VERTICES, 16);
+	glDrawArrays(GL_PATCHES, 0, 3);
 
 	//unbind things (optional?)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

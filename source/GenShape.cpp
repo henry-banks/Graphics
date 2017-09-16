@@ -136,12 +136,11 @@ Geometry makeNGon(size_t sides, float r, float x, float y)
 	return retval;
 }
 
-Geometry makeIcosahedron()
+Geometry makeIcosahedron(float size)
 {
 	//Credit to http://prideout.net/blog/?p=48 for this
 
-	const unsigned *idxs = new unsigned[60];
-	idxs += {
+	const unsigned idxs[] = {
 		2, 1, 0,
 		3, 2, 0,
 		4, 3, 0,
@@ -163,22 +162,24 @@ Geometry makeIcosahedron()
 		5, 10, 9,
 		1, 6, 10 };
 
-	Vertex *verts = new Vertex[12];
-	verts += {
-		glm::vec3(0.000f,  0.000f,  1.000f),
-		glm::vec3(0.894f,  0.000f,  0.447f),
-		glm::vec3(0.276f,  0.851f,  0.447f),
-		glm::vec3(-0.724f,  0.526f,  0.447f),
-		glm::vec3(-0.724f, -0.526f,  0.447f),
-		glm::vec3(0.276f, -0.851f,  0.447f),
-		glm::vec3(0.724f,  0.526f, -0.447f),
-		glm::vec3(-0.276f,  0.851f, -0.447f),
-		glm::vec3(-0.894f,  0.000f, -0.447f),
-		glm::vec3(-0.276f, -0.851f, -0.447f),
-		glm::vec3(0.724f, -0.526f, -0.447f),
-		glm::vec3(0.000f,  0.000f, -1.000f) };
+	const Vertex verts[] = {
+		{{0.000f * size,  0.000f * size,  1.000f * size, 1}, {1,1,1,1}},
+		{{0.894f * size,  0.000f * size,  0.447f * size, 1},{ 1,1,1,1 } },
+		{{0.276f * size,  0.851f * size,  0.447f * size, 1 },{ 1,1,1,1 } },
+		{{-0.724f * size,  0.526f * size,  0.447f * size, 1 },{ 1,1,1,1 } },
+		{{-0.724f * size, -0.526f * size,  0.447f * size, 1 },{ 1,1,1,1 } },
+		{{0.276f * size, -0.851f * size,  0.447f * size, 1 },{ 1,1,1,1 } },
+		{{0.724f * size,  0.526f * size, -0.447f * size, 1 },{ 1,1,1,1 } },
+		{{-0.276f * size,  0.851f * size, -0.447f * size, 1 },{ 1,1,1,1 } },
+		{{-0.894f * size,  0.000f * size, -0.447f * size, 1 },{ 1,1,1,1 } },
+		{{-0.276f * size, -0.851f * size, -0.447f * size, 1 },{ 1,1,1,1 } },
+		{{0.724f * size, -0.526f * size, -0.447f * size, 1 },{ 1,1,1,1 } },
+		{{0.000f * size,  0.000f * size, -1.000f * size, 1 },{ 1,1,1,1 } } };
 
-	Geometry retval = makeGeometry(verts, 12, idxs, 60);
+	const unsigned *id = idxs;
+	const Vertex *v = verts;
+
+	Geometry retval = makeGeometry(v, 12, id, 60);
 
 	return retval;
 }

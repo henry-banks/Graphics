@@ -4,6 +4,7 @@
 #include "graphics\Draw.h"
 #include "graphics\Load.h"
 #include "graphics\GameObjects.h"
+#include "graphics\GenShape.h"
 #include "glm\ext.hpp"
 #include <ctime>
 
@@ -50,12 +51,19 @@ int main()
 	//objects[1].model = glm::rotate(glm::radians(90.f),glm::vec3(-1,0,0));
 
 	//earth
-	objects[2].geo = loadGeometry("../../resources/models/sphere.obj");
+	/*objects[2].geo = loadGeometry("../../resources/models/sphere.obj");
 	objects[2].diffuse = loadTexture("../../resources/textures/earth_diffuse.jpg");
 	objects[2].specular = loadTexture("../../resources/textures/earth_specular.jpg");
 	objects[2].normal = loadTexture("../../resources/textures/earth_normal.jpg");
 	objects[2].gloss = 4;
-	objects[2].model = glm::scale(glm::vec3(2, 2, 2)) * glm::translate(glm::vec3(2, 1, -1));
+	objects[2].model = glm::scale(glm::vec3(2, 2, 2)) * glm::translate(glm::vec3(2, 1, -1));*/
+
+	objects[2].geo = makeIcosahedron();
+	objects[2].diffuse = loadTexture("../../resources/textures/blue.png");
+	objects[2].specular = loadTexture("../../resources/textures/blue.png");
+	objects[2].normal = loadTexture("../../resources/textures/blue.png");
+	objects[2].gloss = 4;
+	objects[2].model = glm::rotate(glm::radians(90.f), glm::vec3(-1, 0, 0));
 
 
 	//Framebuffer
@@ -88,55 +96,71 @@ int main()
 	Shader lpassD = loadShader("../../resources/shaders/lpassD.vert", "../../resources/shaders/lpassD.frag");
 	Shader spassD = loadShader("../../resources/shaders/shadow.vert", "../../resources/shaders/shadow.frag");
 
+	Shader tess = loadShader
+	("../../resources/shaders/tessTest.vert",
+		"../../resources/shaders/tessTest.tesc",
+		"../../resources/shaders/tessTest.tese",
+		"../../resources/shaders/tessTest.geom",
+		"../../resources/shaders/tessTest.frag");
+
+	glm::vec3 ambient = glm::vec3(1, 1, 1);
+
 	int loc = 0, slot = 0;
 	while (context.step())
 	{
-		/////////////////////////////
-		//GPass - Geometry Pass
-		clearFrameBuffer(gbuffer);
-		setFlags(RenderFlag::DEPTH);
-		for (int i = 0; i < 3; i++)
-		{
-			loc = slot = 0;
-			setUniforms(gpass, loc, slot, cam, objects[i]); // 3mat, 3tex, 1flo
-			s0_draw(gbuffer, gpass, objects[i].geo);
-		}
-
-		/////////////////////////////
-		//LPass - Light Pass
-		clearFrameBuffer(lbuffer);
-		for (int i = 0; i < 1; i++)
-		{
-			/////////////////////////////
-			//SPass - Pre-Pass Shadow
-			clearFrameBuffer(sbuffer);
-			setFlags(RenderFlag::DEPTH);
-			for (int j = 0; j < 3; j++)
-			{
-				loc = slot = 0;
-				setUniforms(spassD, loc, slot, dlights[i].getProj(), dlights[i].getView(), objects[j].model);
-				s0_draw(sbuffer, spassD, objects[j].geo);
-			}
-
-			//LPass
-			setFlags(RenderFlag::ADDITIVE);
-			loc = slot = 0;
-			setUniforms(lpassD, loc, slot, cam, dlights[i], gbuffer.targets[3], gbuffer.targets[2], sbuffer.depthTarget);
-			s0_draw(lbuffer, lpassD, quad);
-		}
-
-		/////////////////////////////
-		//CPass - Composite Pass ("main" pass)
-		/*clearFrameBuffer(screen);
-		setFlags(RenderFlag::DEPTH);*/
-		loc = slot = 0;
 		clearFrameBuffer(screen);
-		setFlags(RenderFlag::NONE);
-		setUniforms(cpass, loc, slot, gbuffer.targets[0], gbuffer.targets[0]);
-		s0_draw(screen, cpass, quad);	//only draw the quad??????
+		setFlags(RenderFlag::DEPTH);
+			loc = 0, slot = 0;
+			setUniforms(tess, loc, slot, cam, objects[2], glm::vec3(1,1,1), dlights[0].direction, 3.f, 3.f,
+				glm::vec3(1,1,1), glm::mat3());
+			s0_draw(screen, tess, objects[2].geo);
 	}
 
 	context.term();
 
 	return 0;
 }
+
+/////////////////////////////
+		////GPass - Geometry Pass
+		//clearFrameBuffer(gbuffer);
+		//setFlags(RenderFlag::DEPTH);
+		//for (int i = 0; i < 3; i++)
+		//{
+		//	loc = slot = 0;
+		//	setUniforms(gpass, loc, slot, cam, objects[i]); // 3mat, 3tex, 1flo
+		//	s0_draw(gbuffer, gpass, objects[i].geo);
+		//}
+
+		///////////////////////////////
+		////LPass - Light Pass
+		//clearFrameBuffer(lbuffer);
+		//for (int i = 0; i < 1; i++)
+		//{
+		//	/////////////////////////////
+		//	//SPass - Pre-Pass Shadow
+		//	clearFrameBuffer(sbuffer);
+		//	setFlags(RenderFlag::DEPTH);
+		//	for (int j = 0; j < 3; j++)
+		//	{
+		//		loc = slot = 0;
+		//		setUniforms(spassD, loc, slot, dlights[i].getProj(), dlights[i].getView(), objects[j].model);
+		//		s0_draw(sbuffer, spassD, objects[j].geo);
+		//	}
+
+		//	//LPass
+		//	setFlags(RenderFlag::ADDITIVE);
+		//	loc = slot = 0;
+		//	setUniforms(lpassD, loc, slot, cam, dlights[i], gbuffer.targets[3], gbuffer.targets[2], sbuffer.depthTarget);
+		//	s0_draw(lbuffer, lpassD, quad);
+		//}
+
+		///////////////////////////////
+		////CPass - Composite Pass ("main" pass)
+		///*clearFrameBuffer(screen);
+		//setFlags(RenderFlag::DEPTH);*/
+		//loc = slot = 0;
+		//clearFrameBuffer(screen);
+		//setFlags(RenderFlag::NONE);
+		//setUniforms(cpass, loc, slot, gbuffer.targets[0], gbuffer.targets[0]);
+		//s0_draw(screen, cpass, quad);	//only draw the quad??????

@@ -1,16 +1,17 @@
 #version 450
 
 //this is used to do wireframes otherwise it's garbage
-uniform mat4 model;
-uniform mat3 normalMat;
+layout(location = 1)uniform mat4 view;
+layout(location = 2)uniform mat4 model;
+layout(location = 12)uniform mat3 normalMat;
 //wtf??
 layout(triangles) in;
-layout(triangle_string, max_vertices = 3) out;
+layout(triangle_strip, max_vertices = 3) out;
 
 in vec3 tePos[3];
 in vec3 tePatchDistance[3];
 
-out vec3 gFacetNormal;
+out vec3 gFacetNormal;	
 out vec3 gPatchDistance;
 out vec3 gTriDistance;
 
@@ -18,7 +19,7 @@ void main()
 {
 	vec3 a = tePos[2] - tePos[0];
 	vec3 b = tePos[1] - tePos[0];
-	gFacetNormal = normalMat * normalize(cross(a,b,));
+	gFacetNormal = normalMat * normalize(cross(a,b));
 
 	gPatchDistance = tePatchDistance[0];
 	gTriDistance = vec3(1,0,0);
