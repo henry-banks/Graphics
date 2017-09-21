@@ -133,6 +133,12 @@ int main()
 			//LPass
 			setFlags(RenderFlag::ADDITIVE);
 			loc = slot = 0;
+
+			//////////////////////////////////////////////////////////////////////////////////
+			//
+			//THIS APPEARS TO BE WHAT IS BROKEN HERE.  THERE IS SOMETHING WRONG WITH A MATRIX.
+			//
+			//////////////////////////////////////////////////////////////////////////////////
 			setUniforms(lpassD, loc, slot, cam, dlights[i], gbuffer.targets[3], gbuffer.targets[2], sbuffer.depthTarget);
 			s0_draw(lbuffer, lpassD, quad);
 		}

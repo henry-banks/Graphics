@@ -1,14 +1,13 @@
 #version 450
 
 //wtf??
-layout(triangles, invocations = 3) in;
-//layout(triangles) in;
+layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
 //this is used to do wireframes otherwise it's garbage
 layout(location = 1)uniform mat4 view;
 layout(location = 2)uniform mat4 model;
-layout(location = 12)uniform mat3 normalMat;
+layout(location = 12)uniform mat3 normalMat;	//how to do this??
 
 in vec3 tePos[3];
 in vec3 tePatchDistance[3];

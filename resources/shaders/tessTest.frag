@@ -11,6 +11,7 @@ in float gPrimitive;
 //layout(location = 4)uniform sampler2D specular
 //layout(location = 5)uniform sampler2D normal;
 
+layout(location = 13)uniform vec3 vColor;
 layout(location = 11)uniform vec3 diffuseMat;
 layout(location = 7)uniform vec3 ambient;
 layout(location = 8)uniform vec3 lightPos;
@@ -30,9 +31,10 @@ void main()
 	float df = abs(dot(N,L));
 	vec3 color = ambient + df * diffuseMat;
 
+	//magic...
 	float d1 = min(min(gTriDistance.x,gTriDistance.y),gTriDistance.z);
 	float d2 = min(min(gPatchDistance.x,gPatchDistance.y),gPatchDistance.z);
 	color = amplify(d1,40,-.05) * amplify(d2, 60, -0.5) * color;
 
-	fragColor = vec4(color,1.0);
+	fragColor = vec4(color * vColor,1.0);
 }
