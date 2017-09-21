@@ -63,7 +63,9 @@ int main()
 	objects[2].specular = loadTexture("../../resources/textures/blue.png");
 	objects[2].normal = loadTexture("../../resources/textures/blue.png");
 	objects[2].gloss = 4;
-	objects[2].model = glm::rotate(glm::radians(90.f), glm::vec3(-1, 0, 0));
+	objects[2].model = 
+		glm::rotate(glm::radians(90.f), glm::vec3(-1, 0, 0)) *
+		glm::translate(glm::vec3(2, 1, -1));
 
 
 	//Framebuffer
@@ -103,17 +105,84 @@ int main()
 		"../../resources/shaders/tessTest.geom",
 		"../../resources/shaders/tessTest.frag");
 
+	//Shader tess = loadShader
+	//("../../resources/shaders/tessTest.vert",
+	//	"../../resources/shaders/tessTest.tesc",
+	//	"../../resources/shaders/tessTest.tese",
+	//	"../../resources/shaders/tessTest.frag");
+
 	glm::vec3 ambient = glm::vec3(1, 1, 1);
 
 	int loc = 0, slot = 0;
 	while (context.step())
 	{
+		float fTime = (float)context.getTime();
+
+		//objects[2].model = glm::translate(glm::vec3(2, 1, -1)) *
+		//	glm::rotate(glm::radians(90.f * fTime), glm::vec3(-1, 0, 0));
+		//clearFrameBuffer(screen);
+		//setFlags(RenderFlag::DEPTH);
+		//loc = 0, slot = 0;
+		//setUniforms(tess, loc, slot, cam, objects[2], glm::vec3(1,1,1), dlights[0].direction, 3.f, 3.f,
+		//	glm::vec3(1,1,1), glm::mat3());//
+		//s0_draw(screen, tess, objects[2].geo, true);
+
+
+		/////////////////////////////
+		//GPass - Geometry Pass
+		clearFrameBuffer(gbuffer);
+		setFlags(RenderFlag::DEPTH);
+		for (int i = 0; i < 3; i++)
+		{
+			loc = slot = 0;
+			setUniforms(gpass, loc, slot, cam, objects[i]); // 3mat, 3tex, 1flo
+			s0_draw(gbuffer, gpass, objects[i].geo);
+		}
+
+		///////////////////////////////
+		//LPass - Light Pass
+		clearFrameBuffer(lbuffer);
+		for (int i = 0; i < 1; i++)
+		{
+			/////////////////////////////
+			//SPass - Pre-Pass Shadow
+			clearFrameBuffer(sbuffer);
+			setFlags(RenderFlag::DEPTH);
+			for (int j = 0; j < 3; j++)
+			{
+				loc = slot = 0;
+				setUniforms(spassD, loc, slot, dlights[i].getProj(), dlights[i].getView(), objects[j].model);
+				s0_draw(sbuffer, spassD, objects[j].geo);
+			}
+
+			//LPass
+			setFlags(RenderFlag::ADDITIVE);
+			loc = slot = 0;
+			setUniforms(lpassD, loc, slot, cam, dlights[i], gbuffer.targets[3], gbuffer.targets[2], sbuffer.depthTarget);
+			s0_draw(lbuffer, lpassD, quad);
+		}
+
+		///////////////////////////////
+		//CPass - Composite Pass ("main" pass)
+		/*clearFrameBuffer(screen);
+		setFlags(RenderFlag::DEPTH);*/
+		loc = slot = 0;
+		clearFrameBuffer(screen);
+		setFlags(RenderFlag::NONE);
+		setUniforms(cpass, loc, slot, gbuffer.targets[0], gbuffer.targets[0]);
+		s0_draw(screen, cpass, quad);	//only draw the quad??????
+
+		///////////////////////////////
+		//Tessellation pass?
+		objects[2].model = glm::translate(glm::vec3(0, 0, -3)) *
+			glm::rotate(glm::radians(90.f * fTime), glm::vec3(-1, 0, 0));
 		clearFrameBuffer(screen);
 		setFlags(RenderFlag::DEPTH);
-			loc = 0, slot = 0;
-			setUniforms(tess, loc, slot, cam, objects[2], glm::vec3(1,1,1), dlights[0].direction, 3.f, 3.f,
-				glm::vec3(1,1,1), glm::mat3());
-			s0_draw(screen, tess, objects[2].geo);
+		loc = 0, slot = 0;
+		setUniforms(tess, loc, slot, cam, objects[2], glm::vec3(1, 1, 1), dlights[0].direction, 3.f, 3.f,
+			glm::vec3(1, 1, 1), glm::mat3());//
+		s0_draw(screen, tess, objects[2].geo, true);
+
 	}
 
 	context.term();

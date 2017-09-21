@@ -4,7 +4,7 @@
 #include "graphics\Draw.h"
 #include <glm/gtc/type_ptr.hpp>
 
-void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
+void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g, bool useTess)
 {
 	//things to use for draw
 	glBindFramebuffer(GL_FRAMEBUFFER, f.handle);
@@ -15,9 +15,14 @@ void s0_draw(const Framebuffer & f, const Shader & s, const Geometry & g)
 	glViewport(0, 0, f.width, f.height);
 
 	//DRAW THINGS
-	//glDrawElements(GL_TRIANGLES, g.size, GL_UNSIGNED_INT, 0);
-	glPatchParameteri(GL_PATCH_VERTICES, 16);
-	glDrawArrays(GL_PATCHES, 0, 3);
+	if (useTess)
+	{
+		glDrawElements(GL_PATCHES, g.size, GL_UNSIGNED_INT, 0);
+		glPatchParameteri(GL_PATCH_VERTICES, 16);
+		glDrawArrays(GL_PATCHES, 0, 3);
+	}
+	else glDrawElements(GL_TRIANGLES, g.size, GL_UNSIGNED_INT, 0);
+	
 
 	//unbind things (optional?)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

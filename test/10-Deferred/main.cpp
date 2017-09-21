@@ -4,6 +4,7 @@
 #include "graphics\Draw.h"
 #include "graphics\Load.h"
 #include "graphics\GameObjects.h"
+#include "graphics\GenShape.h"
 #include "glm\ext.hpp"
 #include <ctime>
 
@@ -27,6 +28,8 @@ int main()
 	solveTangents(vquad, 4, quadidx, 6);
 	Geometry quad = makeGeometry(vquad, 4, quadidx, 6);
 
+	Geometry ico = makeIcosahedron();
+
 	/////////////////////////
 	//Make 8 objects
 	SpecGloss objects[8];
@@ -48,12 +51,16 @@ int main()
 	//objects[1].model = glm::rotate(glm::radians(90.f),glm::vec3(-1,0,0));
 
 	//earth
-	objects[2].geo = loadGeometry("../../resources/models/sphere.obj");
+	//objects[2].geo = loadGeometry("../../resources/models/sphere.obj");
+	objects[2].geo = ico;
 	objects[2].diffuse = loadTexture("../../resources/textures/earth_diffuse.jpg");
 	objects[2].specular = loadTexture("../../resources/textures/earth_specular.jpg");
 	objects[2].normal = loadTexture("../../resources/textures/earth_normal.jpg");
 	objects[2].gloss = 4;
-	objects[2].model = glm::scale(glm::vec3(2, 2, 2)) * glm::translate(glm::vec3(2, 1, -1));
+	objects[2].model = 
+		glm::scale(glm::vec3(2, 2, 2)) * 
+		glm::translate(glm::vec3(2, 1, -1)) *
+		glm::rotate(glm::radians(90.f), glm::vec3(1,0,0));
 
 
 	//Framebuffer
@@ -89,6 +96,13 @@ int main()
 	int loc = 0, slot = 0;
 	while(context.step())
 	{
+		float fTime = (float)context.getTime();
+
+		objects[2].model =
+			glm::scale(glm::vec3(2, 2, 2)) *
+			glm::translate(glm::vec3(2, 1, -1)) *
+			glm::rotate(glm::radians(90.f * fTime), glm::vec3(1, 0, 0));
+
 		/////////////////////////////
 		//GPass - Geometry Pass
 		clearFrameBuffer(gbuffer);

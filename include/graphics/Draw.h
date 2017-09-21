@@ -4,7 +4,7 @@ struct Geometry;
 struct Shader;
 struct Framebuffer;
 
-void s0_draw(const Framebuffer &f, const Shader &s, const Geometry &g);
+void s0_draw(const Framebuffer &f, const Shader &s, const Geometry &g, bool useTess = false);
 
 
 void clearFrameBuffer(const Framebuffer &f, bool color = true, bool depth = true);
